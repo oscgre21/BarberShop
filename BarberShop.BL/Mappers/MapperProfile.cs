@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using BarberShop.Domain.Entities.Global;
-using BarberShop.BL.DTOs.Global; 
+using BarberShop.BL.DTOs.Global;
+using BarberShop.Domain.Entities.DataPerson;
+using BarberShop.Domain.Entities.Users;
 
 namespace BarberShop.BL.Mappers
 {
@@ -14,12 +16,13 @@ namespace BarberShop.BL.Mappers
         public MapperProfile()
         {
             #region Globales
-            CreateMap<Demo, DemoDto>()
+            CreateMap<PersonData, PersonDTO>()
                 .ReverseMap();
-    
+            CreateMap<UserIdentity, UserCredentialsDto>()
+             .ReverseMap();
 
             #endregion
-                         
+
 
         }
     }

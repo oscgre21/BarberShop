@@ -11,7 +11,7 @@ using BarberShop.BL.DTOs.Global;
 
 namespace BarberShop.API.Controllers.Global.Generales
 {
-    [AllowAnonymous]
+   // [AllowAnonymous]
     public class DemoController : BaseMinApiController
     {
 
@@ -26,16 +26,16 @@ namespace BarberShop.API.Controllers.Global.Generales
         [Route("get")]
         public async Task<IActionResult> get()
         {
-            var model = await _demo.GetListOf();
-            return Ok(model);
+            //var model = await _demo.GetListOf();
+            return Ok("Ok");
         }
 
         [HttpGet]
         [Route("getByID")]
         public async Task<IActionResult> getByID(Guid ids)
         {
-            var model = await _demo.GetOfByID(ids);
-            return Ok(model);
+           // var model = await _demo.GetOfByID(ids);
+            return Ok();
         }
         [HttpPost]
         [Route("save")]
@@ -43,8 +43,8 @@ namespace BarberShop.API.Controllers.Global.Generales
         {
             if (ModelState.IsValid)
             {
-                var info = await _demo.SaveOf(obj);
-                return Ok(info);
+                //var info = await _demo.SaveOf(obj);
+                return Ok();
             }
 
             return NotFound();

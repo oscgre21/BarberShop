@@ -22,7 +22,8 @@ namespace BarberShop.Services.Base
         Task<IEnumerable<TEntityDto>> GetWithMap(Expression<Func<TEntity, bool>> predicate = null,
                int? page = null,
                int? pageSize = null,
-               SortExpression<TEntity> sortExpressions = null);
+               SortExpression<TEntity> sortExpressions = null,
+               params Expression<Func<TEntity, object>>[] includeProperties);
 
         Task<TEntity> GetById(Guid id);
 

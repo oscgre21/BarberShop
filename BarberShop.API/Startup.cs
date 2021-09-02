@@ -30,6 +30,10 @@ using System.Threading.Tasks;
 using BarberShop.API.Models;
 using Sentry.AspNetCore;
 using BarberShop.BL.Validations.Global;
+using BarberShop.Services.JWTFactory;
+using BarberShop.API.Auth;
+using BarberShop.Services.Auth;
+using BarberShop.Domain.UnitOfWork;
 
 namespace BarberShop.API
 {
@@ -43,7 +47,7 @@ namespace BarberShop.API
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services )
         {
             services.AddControllers()
                 //Adding Fluent Validation
@@ -89,6 +93,7 @@ namespace BarberShop.API
             #endregion
 
             #region Adding Auth 
+            /*
             var authenticationConfig = Configuration.GetSection("AuthenticationConfig").Get<AuthenticationSettings>();
 
             services
@@ -102,7 +107,50 @@ namespace BarberShop.API
                     {
                         ValidateAudience = false
                     };
-                });
+                });*/
+
+
+            #region AutoMapper Config
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            #endregion
+            
+            var tokenKey = Configuration.GetValue<string>("TokenKey");
+            var key = Encoding.ASCII.GetBytes(tokenKey);
+
+            var sp = services.BuildServiceProvider();
+
+            //  services.AddSingleton<IAuthenticationManager, AuthenticationManager>();
+            services.AddSingleton<IAuthenticationManager>(option => {
+                var auth = new AuthenticationManager(sp.GetService<IUnitOfWork<BaseDBContext>>(),
+                    sp.GetService<IMapper>());
+                return auth;
+            });
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddScheme<BasicAuthenticationOptions, CustomAuthenticationHandler>
+            (JwtBearerDefaults.AuthenticationScheme, o => {
+            });
+
+       
+
+            /*.AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });*/
+            // services.AddSingleton<IJWTAuthenticationManager>(new JWTAuthenticationManager(tokenKey));
+
+
             services.AddAuthorization();
             #endregion
 
@@ -136,9 +184,7 @@ namespace BarberShop.API
             });
             #endregion
 
-            #region AutoMapper Config
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            #endregion
+   
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -159,6 +205,7 @@ namespace BarberShop.API
             //
             app.UseAuthentication();
             app.UseAuthorization();
+           
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 

@@ -7,6 +7,7 @@ using BarberShop.Services.Global;
 using BarberShop.Services.Base;
 using BarberShop.Services.Logging;
 using BarberShop.Services.Demo;
+using BarberShop.Services.Auth;
 
 namespace BarberShop.Services.IoC
 {
@@ -22,14 +23,13 @@ namespace BarberShop.Services.IoC
 
         public static void AddOnlyEntityServicesRegistry(this IServiceCollection services)
         { 
-     
-             
-
+      
             services.AddScoped(typeof(IBaseEntityService<,>) , typeof(BaseEntityService<,>));
             
             services.AddScoped<IDemoServices, DemoServices>();
 
             services.AddScoped<ITestDemoServices, TestDemoServices>();
+
 
             // services.AddScoped<ILoggingService, SentryLogger>(); 
         }

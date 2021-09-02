@@ -98,12 +98,13 @@ namespace BarberShop.Services.Base
             (Expression<Func<TEntity, bool>> predicate = null,
                int? page = null,
                int? pageSize = null,
-               SortExpression<TEntity> sortExpressions = null)
+               SortExpression<TEntity> sortExpressions = null,
+                params Expression<Func<TEntity, object>>[] includeProperties)
         {
             var list =await _uow.GetRepository<TEntity>().Get(predicate,
                 page,
                 pageSize,
-                sortExpressions);
+                sortExpressions,true, includeProperties);
             return Map(list);
         }
 

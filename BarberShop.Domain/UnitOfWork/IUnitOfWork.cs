@@ -17,4 +17,8 @@ namespace BarberShop.Domain.UnitOfWork
     {
         TContext Context { get; }
     }
+    public interface IUnitOfWorkS<TContext> : IUnitOfWork
+    {
+        TContext Context { get; }
+    }
 }

@@ -14,7 +14,10 @@ namespace BarberShop.Domain.IoC
         {
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IUnitOfWork<BaseDBContext>, ContextUnitOfWork>();
-            
+            //services.AddScoped<IUnitOfWork<BaseDBContext>, ContextUnitOfWork>();
+           // IUnitOfWorkS
+
+
         }
     }
 }

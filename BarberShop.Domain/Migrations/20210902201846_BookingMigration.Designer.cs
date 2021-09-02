@@ -3,14 +3,16 @@ using System;
 using BarberShop.Domain.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BarberShop.Domain.Migrations
 {
     [DbContext(typeof(BaseDBContext))]
-    partial class BaseDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210902201846_BookingMigration")]
+    partial class BookingMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,8 +246,7 @@ namespace BarberShop.Domain.Migrations
                         .HasColumnType("varchar(60)");
 
                     b.Property<string>("ProductType")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
