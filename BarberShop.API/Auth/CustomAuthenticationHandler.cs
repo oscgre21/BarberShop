@@ -69,20 +69,21 @@ namespace BarberShop.API.Auth
  
         private AuthenticateResult validateToken(string token)
         {
-            var validatedToken = customAuthenticationManager.Tokens.FirstOrDefault(t => t.Key == token);
-            if (validatedToken.Key == null)
+            var validatedToken = customAuthenticationManager.Validate(token);
+           
+            var data = validatedToken.Match(leftFunc =>
             {
-                return AuthenticateResult.Fail("Unauthorized");
-            }
-            var claims = new List<Claim>
+                var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, validatedToken.Value.persona.NameComplete),
+                    new Claim(ClaimTypes.Name, leftFunc.persona.NameComplete),
                 };
- 
-            var identity = new ClaimsIdentity(claims, Scheme.Name);
-            var principal = new System.Security.Principal.GenericPrincipal(identity, null);
-            var ticket = new AuthenticationTicket(principal, Scheme.Name);
-            return AuthenticateResult.Success(ticket);
+                var identity = new ClaimsIdentity(claims, Scheme.Name);
+                var principal = new System.Security.Principal.GenericPrincipal(identity, null);
+                var ticket = new AuthenticationTicket(principal, Scheme.Name);
+                return AuthenticateResult.Success(ticket);
+            },rightFunc => AuthenticateResult.Fail("Unauthorized"));
+             
+            return data;
         }
     }
 }

@@ -12,19 +12,21 @@ using System.Threading.Tasks;
 
 namespace BarberShop.Domain.Repositories
 {
-    public class BaseRepository<T> : IRepository<T> where T : class, IBaseEntity
+    public class BaseRepository<DB,T> : IRepository<DB> 
+        where T : class, IBaseEntity
+        where DB : DbContext
     {
-        public readonly IUnitOfWork<BaseDBContext> _uow;
-        public readonly BaseContext _context;
+        public readonly IUnitOfWork<DB> _uow;
+        public readonly DB _context;
         public readonly DbSet<T> _dbSet;
-        public BaseRepository(IUnitOfWork<BaseDBContext> uow)
+        public BaseRepository(IUnitOfWork<DB> uow)
         {
             _uow = uow;
             _context = _uow.Context;
             _dbSet = _context.Set<T>();
         }
 
-        public Task<T> First(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties)
+        public Task<T> First<T>(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> list = _dbSet.AsQueryable();
 
@@ -34,12 +36,13 @@ namespace BarberShop.Domain.Repositories
             }
             return list.FirstOrDefaultAsync();
         }
-        public async Task<IEnumerable<T>> Get(Expression<Func<T, bool>> predicate = null,
+        public async Task<IEnumerable<T>> Get<T>(Expression<Func<T, bool>> predicate = null,
                 int? page = null,
                 int? pageSize = null,
                 SortExpression<T> sortExpressions = null,
                 bool trackEntities = true,
                 params Expression<Func<T, object>>[] includeProperties)
+
         {
             IQueryable<T> query = _dbSet.AsQueryable();
 
@@ -84,7 +87,7 @@ namespace BarberShop.Domain.Repositories
 
             return await query.ToListAsync();
         }
-        public virtual Task<T> GetById(Guid id, params Expression<Func<T, object>>[] includeProperties)
+        public virtual Task<T> GetById<T>(Guid id, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> list = _dbSet.AsQueryable();
 
@@ -95,24 +98,24 @@ namespace BarberShop.Domain.Repositories
 
             return list.FirstOrDefaultAsync(x => x.Id == id);
         }
-        public void Add(T entity)
+        public void Add<T>(T entity)
         {
             _dbSet.Add(entity);
         }
-        public void Add(params T[] entities)
+        public void Add<T>(params T[] entities)
         {
             _dbSet.AddRange(entities);
         }
-        public void Add(IEnumerable<T> entities)
+        public void Add<T>(IEnumerable<T> entities)
         {
             _dbSet.AddRange(entities);
         }
 
-        public void Delete(T entity)
+        public void Delete<T>(T entity)
         {
             _dbSet.Remove(entity);
         }
-        public async Task Delete(Guid id)
+        public async Task Delete<T>(Guid id)
         {
             T entity = await GetById(id);
             _dbSet.Remove(entity);

@@ -28,7 +28,7 @@ namespace BarberShop.Services.IoC
             
             services.AddScoped<IDemoServices, DemoServices>();
 
-            services.AddScoped<ITestDemoServices, TestDemoServices>();
+            services.AddScoped<IProductServices, ProductServices>();
 
 
             // services.AddScoped<ILoggingService, SentryLogger>(); 

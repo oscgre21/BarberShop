@@ -1,25 +1,23 @@
-﻿using BarberShop.Core.Basemodel.BaseEntity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BarberShop.BL.DTOs.Base;
 
-namespace BarberShop.Domain.Entities.Products
+namespace BarberShop.BL.DTOs.Global
 {
-    public class Product : BaseEntity
+    public class ProductsDTO : BaseEntityDto
     {
-        [MaxLength(60)]
+       
         public string Codigo { get; set; }
-        [MaxLength(60)]
+       
         public string Name { get; set; }
-        [MaxLength(120)]
+   
         public string Description { get; set; }
-        [MaxLength(20)]
+   
         public string ProductType { get; set; } = "SERVICIO";
         public int Estatus { get; set; } = 1;
-         
         public string Image { get; set; }
         public string Color { get; set; }
     }

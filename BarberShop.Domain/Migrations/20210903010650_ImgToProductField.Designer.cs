@@ -3,14 +3,16 @@ using System;
 using BarberShop.Domain.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BarberShop.Domain.Migrations
 {
     [DbContext(typeof(BaseDBContext))]
-    partial class BaseDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210903010650_ImgToProductField")]
+    partial class ImgToProductField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,9 +225,6 @@ namespace BarberShop.Domain.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("varchar(60)");
 
-                    b.Property<string>("Color")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTimeOffset?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -241,9 +240,6 @@ namespace BarberShop.Domain.Migrations
 
                     b.Property<int>("Estatus")
                         .HasColumnType("int");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .HasMaxLength(60)

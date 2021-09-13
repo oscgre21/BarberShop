@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BarberShop.BL.DTOs.Global;
+using BarberShop.Core.Lib;
 using BarberShop.Domain.Contexts;
 using BarberShop.Domain.Entities.DataPerson;
 using BarberShop.Domain.Entities.Users;
@@ -17,27 +18,29 @@ using System.Threading.Tasks;
 namespace BarberShop.Services.Auth
 {
   
-public interface IAuthenticationManager : IBaseEntityService<UserIdentity, UserCredentialsDto>
+public interface IAuthenticationManager  //IBaseEntityService<UserIdentity, UserCredentialsDto>
     {
         Task<string> Authenticate(string username, string password);
         IDictionary<string, UserCredentialsDto> Tokens { get; }
-        bool Validate(string token);
+        Either<UserCredentialsDto, bool> Validate(string token);
         Task<string> register(UserCredentialsDto user);
          
 
     }
-
-    public class AuthenticationManager : BaseEntityService<UserIdentity, UserCredentialsDto>, IAuthenticationManager
+    // BaseEntityService<UserIdentity, UserCredentialsDto>,
+    public class AuthenticationManager : IAuthenticationManager
     {
         private readonly IDictionary<string, UserCredentialsDto> tokens = new Dictionary<string, UserCredentialsDto>();
 
         public IDictionary<string, UserCredentialsDto> Tokens => tokens;
 
 
-
-        public AuthenticationManager(IUnitOfWork<BaseDBContext> uow, IMapper mapper)
-           : base(uow, mapper)
+        IUnitOfWork<LoginDBContext> _uow;
+        IMapper _mapper;
+        public AuthenticationManager(IUnitOfWork<LoginDBContext> uow, IMapper mapper)
         {
+            _uow = uow;
+            _mapper = mapper;
             LoadTokens();
         }
         public async void LoadTokens() {
@@ -131,10 +134,17 @@ public interface IAuthenticationManager : IBaseEntityService<UserIdentity, UserC
             return token;
         }
 
-        public  bool Validate(string token)
+        public Either<UserCredentialsDto, bool> Validate(string token)
         {
+            if (Tokens.Values.Count == 0) {
+                LoadTokens();
+            }
             var data = Tokens.FirstOrDefault(t => t.Key == token).Value;
-            return  data != null?true:false;
+            if (data == null)
+            {
+                return new Either<UserCredentialsDto, bool>(false);
+            }
+            return new Either<UserCredentialsDto, bool>(data);
         }
          
     }

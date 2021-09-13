@@ -8,6 +8,7 @@ using BarberShop.Domain.Entities.Global;
 using BarberShop.BL.DTOs.Global;
 using BarberShop.Domain.Entities.DataPerson;
 using BarberShop.Domain.Entities.Users;
+using BarberShop.Domain.Entities.Products;
 
 namespace BarberShop.BL.Mappers
 {
@@ -20,6 +21,9 @@ namespace BarberShop.BL.Mappers
                 .ReverseMap();
             CreateMap<UserIdentity, UserCredentialsDto>()
              .ReverseMap();
+
+            CreateMap<Product, ProductsDTO>()
+                .ReverseMap();
 
             #endregion
 

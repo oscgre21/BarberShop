@@ -77,13 +77,29 @@ namespace BarberShop.API
             var connectionString = Configuration.GetConnectionString("CloudConnection");
             var sqlVersion = ServerVersion.AutoDetect(connectionString);
          
-            services.AddDbContext<BaseDBContext>(
+            services.AddDbContextPool<BaseDBContext>(
+                dbContextOptions => dbContextOptions
+                    .UseMySql(connectionString, sqlVersion)
+                    .EnableSensitiveDataLogging() // <-- These two calls are optional but help
+                    .EnableDetailedErrors()       // <-- with debugging (remove for production).
+            );
+
+            services.AddDbContext<LoginDBContext>(
+               dbContextOptions => dbContextOptions
+                   .UseMySql(connectionString, sqlVersion)
+                   .EnableSensitiveDataLogging() // <-- These two calls are optional but help
+                   .EnableDetailedErrors()       // <-- with debugging (remove for production).
+           );
+
+            /*
+             services.AddDbContextPool<BaseDBContext>(
                 dbContextOptions => dbContextOptions
                     .UseMySql(connectionString, sqlVersion)
                     .EnableSensitiveDataLogging() // <-- These two calls are optional but help
                     .EnableDetailedErrors()       // <-- with debugging (remove for production).
             ,
             ServiceLifetime.Transient);
+             */
             #endregion
 
             #region IoC Registry
@@ -121,7 +137,7 @@ namespace BarberShop.API
 
             //  services.AddSingleton<IAuthenticationManager, AuthenticationManager>();
             services.AddSingleton<IAuthenticationManager>(option => {
-                var auth = new AuthenticationManager(sp.GetService<IUnitOfWork<BaseDBContext>>(),
+                var auth = new AuthenticationManager(sp.GetService<IUnitOfWork<LoginDBContext>>(),
                     sp.GetService<IMapper>());
                 return auth;
             });
