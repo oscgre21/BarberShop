@@ -84,6 +84,15 @@ namespace BarberShop.API
                     .EnableDetailedErrors()       // <-- with debugging (remove for production).
             ,
             ServiceLifetime.Transient);
+
+
+            services.AddDbContext<CustomDBContext>(
+                    dbContextOptions => dbContextOptions
+                        .UseMySql(connectionString, sqlVersion)
+                        .EnableSensitiveDataLogging() // <-- These two calls are optional but help
+                        .EnableDetailedErrors()       // <-- with debugging (remove for production).
+                ,
+                ServiceLifetime.Transient);
             #endregion
 
             #region IoC Registry

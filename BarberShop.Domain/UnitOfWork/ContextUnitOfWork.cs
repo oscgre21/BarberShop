@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace BarberShop.Domain.UnitOfWork
 {
-    public class ContextUnitOfWork : IUnitOfWork<BaseDBContext>
+    public class ContextUnitOfWork : IUnitOfWork<BaseContext>
     {
-        public BaseDBContext Context { get; set; }
+        public BaseContext Context { get; set; }
         public readonly IServiceProvider _serviceProvider;
 
-        public ContextUnitOfWork(IServiceProvider serviceProvider, BaseDBContext context)
+        public ContextUnitOfWork(IServiceProvider serviceProvider, BaseContext context)
         {
             _serviceProvider = serviceProvider;
             this.Context = context;

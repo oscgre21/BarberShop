@@ -14,10 +14,10 @@ namespace BarberShop.Domain.Repositories
 {
     public class BaseRepository<T> : IRepository<T> where T : class, IBaseEntity
     {
-        public readonly IUnitOfWork<BaseDBContext> _uow;
+        public readonly IUnitOfWork<BaseContext> _uow;
         public readonly BaseContext _context;
         public readonly DbSet<T> _dbSet;
-        public BaseRepository(IUnitOfWork<BaseDBContext> uow)
+        public BaseRepository(IUnitOfWork<BaseContext> uow)
         {
             _uow = uow;
             _context = _uow.Context;

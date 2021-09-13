@@ -17,9 +17,9 @@ namespace BarberShop.Services.Base
         where TEntity : class, IBaseEntity
          where TEntityDto : class, IBaseEntityDto
     {
-        protected readonly IUnitOfWork<BaseDBContext> _uow;
+        protected readonly IUnitOfWork<BaseContext> _uow;
         protected readonly IMapper _mapper;
-        public BaseEntityService(IUnitOfWork<BaseDBContext> uow,
+        public BaseEntityService(IUnitOfWork<BaseContext> uow,
             IMapper mapper)
         {
             _uow = uow;

@@ -15,7 +15,7 @@ namespace BarberShop.Services.Demo
     }
     public class DemoServices : BaseEntityService<BarberShop.Domain.Entities.Global.Demo, DemoDto>, IDemoServices
     {
-        public DemoServices(IUnitOfWork<BaseDBContext> uow, IMapper mapper)
+        public DemoServices(IUnitOfWork<BaseContext> uow, IMapper mapper)
            : base(uow, mapper)
         {
 

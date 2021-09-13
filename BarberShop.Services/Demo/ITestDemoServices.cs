@@ -29,7 +29,7 @@ namespace BarberShop.Services.Demo
     }
     public class TestDemoServices : BaseEntityServicesTestImpl<BarberShop.Domain.Entities.Global.Demo>, ITestDemoServices, ITestDemoServicesGlobal<DemoDto>
     {
-        public TestDemoServices(IUnitOfWork<BaseDBContext> uow, IMapper mapper)
+        public TestDemoServices(IUnitOfWork<CustomDBContext> uow, IMapper mapper)
            : base(uow, mapper)
         {
 
