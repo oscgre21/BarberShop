@@ -12,7 +12,7 @@ namespace BarberShop.Domain.IoC
     {
         public static void AddDatamodelRegistry(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<,>));
             services.AddScoped<IUnitOfWork<BaseDBContext>, ContextUnitOfWork>();
             //services.AddScoped<IUnitOfWork<BaseDBContext>, ContextUnitOfWork>();
            // IUnitOfWorkS

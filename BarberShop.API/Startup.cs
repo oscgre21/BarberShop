@@ -136,8 +136,16 @@ namespace BarberShop.API
             var sp = services.BuildServiceProvider();
 
             //  services.AddSingleton<IAuthenticationManager, AuthenticationManager>();
+            //  services.AddSingleton<IAuthenticationManager, AuthenticationManager>();
             services.AddSingleton<IAuthenticationManager>(option => {
-                var auth = new AuthenticationManager(sp.GetService<IUnitOfWork<LoginDBContext>>(),
+                //as IUnitOfWork<BaseContext>;
+                var dboption = new DbContextOptionsBuilder<BaseDBContext>();
+                dboption.UseMySql(connectionString, sqlVersion)
+                        .EnableSensitiveDataLogging() // <-- These two calls are optional but help
+                        .EnableDetailedErrors();
+
+                var db = new ContextUnitOfWork(sp, new BaseDBContext(dboption.Options));
+                var auth = new AuthenticationManager(db,
                     sp.GetService<IMapper>());
                 return auth;
             });

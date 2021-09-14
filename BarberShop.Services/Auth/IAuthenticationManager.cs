@@ -18,29 +18,27 @@ using System.Threading.Tasks;
 namespace BarberShop.Services.Auth
 {
   
-public interface IAuthenticationManager  //IBaseEntityService<UserIdentity, UserCredentialsDto>
+public interface IAuthenticationManager : IBaseEntityService<UserIdentity, UserCredentialsDto>
     {
         Task<string> Authenticate(string username, string password);
         IDictionary<string, UserCredentialsDto> Tokens { get; }
-        Either<UserCredentialsDto, bool> Validate(string token);
+        Either<UserCredentialsDto,bool> Validate(string token);
         Task<string> register(UserCredentialsDto user);
          
 
     }
-    // BaseEntityService<UserIdentity, UserCredentialsDto>,
-    public class AuthenticationManager : IAuthenticationManager
+
+    public class AuthenticationManager : BaseEntityService<UserIdentity, UserCredentialsDto, IUnitOfWork<BaseDBContext>>, IAuthenticationManager
     {
         private readonly IDictionary<string, UserCredentialsDto> tokens = new Dictionary<string, UserCredentialsDto>();
 
         public IDictionary<string, UserCredentialsDto> Tokens => tokens;
 
 
-        IUnitOfWork<LoginDBContext> _uow;
-        IMapper _mapper;
-        public AuthenticationManager(IUnitOfWork<LoginDBContext> uow, IMapper mapper)
+
+        public AuthenticationManager(IUnitOfWork<BaseDBContext> uow, IMapper mapper)
+           : base(uow, mapper)
         {
-            _uow = uow;
-            _mapper = mapper;
             LoadTokens();
         }
         public async void LoadTokens() {
@@ -49,8 +47,7 @@ public interface IAuthenticationManager  //IBaseEntityService<UserIdentity, User
             foreach (var tokens in ident) {
                 if (tokens.authkey != null) {
                     var data = _mapper.Map<UserCredentialsDto>(tokens);
-                    Tokens.Add(tokens.authkey, data);
-                    
+                    Tokens.Add(tokens.authkey, data); 
                 }
                    
             }
@@ -136,15 +133,9 @@ public interface IAuthenticationManager  //IBaseEntityService<UserIdentity, User
 
         public Either<UserCredentialsDto, bool> Validate(string token)
         {
-            if (Tokens.Values.Count == 0) {
-                LoadTokens();
-            }
             var data = Tokens.FirstOrDefault(t => t.Key == token).Value;
-            if (data == null)
-            {
-                return new Either<UserCredentialsDto, bool>(false);
-            }
-            return new Either<UserCredentialsDto, bool>(data);
+            return  data != null? new Either<UserCredentialsDto, bool>(data) 
+                            : new Either<UserCredentialsDto, bool>(false);
         }
          
     }

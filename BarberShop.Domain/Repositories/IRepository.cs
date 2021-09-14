@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,31 +7,30 @@ using System.Threading.Tasks;
 
 namespace BarberShop.Domain.Repositories
 {
-    public interface IRepository<DB> : IDisposable //where T : class
-        where DB : DbContext
+    public interface IRepository<T> : IDisposable where T : class
     {
-        Task<IEnumerable<T>> Get<T>(Expression<Func<T, bool>> predicate = null, 
+        Task<IEnumerable<T>> Get(Expression<Func<T, bool>> predicate = null, 
                 int? page = null,
                 int? pageSize = null,
                 SortExpression<T> sortExpressions = null,
                 bool trackEntities = true,
-                params Expression<Func<T, object>>[] includeProperties)  where T : class;
+                params Expression<Func<T, object>>[] includeProperties);
 
-        Task<T> First<T>(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties);
-        Task<T> GetById<T>(Guid id, params Expression<Func<T, object>>[] includeProperties);
+        Task<T> First(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties);
+        Task<T> GetById(Guid id, params Expression<Func<T, object>>[] includeProperties);
 
-        void Add<T>(T entity);
-        void Add<T>(params T[] entities);
-        void Add<T>(IEnumerable<T> entities);
+        void Add(T entity);
+        void Add(params T[] entities);
+        void Add(IEnumerable<T> entities);
 
-        void Delete<T>(T entity);
-        Task Delete<T>(Guid id);
-        void Delete<T>(params T[] entities);
-        void Delete<T>(IEnumerable<T> entities); 
-        void Update<T>(T entity);
-        void Update<T>(params T[] entities);
-        void Update<T>(IEnumerable<T> entities);
-        void Detached<T>(T entity);
+        void Delete(T entity);
+        Task Delete(Guid id);
+        void Delete(params T[] entities);
+        void Delete(IEnumerable<T> entities); 
+        void Update(T entity);
+        void Update(params T[] entities);
+        void Update(IEnumerable<T> entities);
+        void Detached(T entity);
     }
     
 }

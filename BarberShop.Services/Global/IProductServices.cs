@@ -19,7 +19,7 @@ namespace BarberShop.Services.Global
         Task<List<ProductsDTO>> getListServices();
         Task<ProductAndServicesDTO> getProductAndServices();
     }
-    public class ProductServices : BaseEntityService<Product, ProductsDTO>, IProductServices
+    public class ProductServices : BaseEntityService<Product, ProductsDTO, IUnitOfWork<BaseDBContext>>, IProductServices
     {
         public ProductServices(IUnitOfWork<BaseDBContext> uow, IMapper mapper)
            : base(uow, mapper)
