@@ -13,7 +13,7 @@ namespace BarberShop.Services.Demo
     {
 
     }
-    public class DemoServices : BaseEntityService<BarberShop.Domain.Entities.Global.Demo, DemoDto>, IDemoServices
+    public class DemoServices : BaseEntityService<BarberShop.Domain.Entities.Global.Demo, DemoDto, IUnitOfWork<BaseDBContext>>, IDemoServices
     {
         public DemoServices(IUnitOfWork<BaseContext> uow, IMapper mapper)
            : base(uow, mapper)

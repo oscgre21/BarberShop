@@ -13,13 +13,14 @@ using System.Threading.Tasks;
 
 namespace BarberShop.Services.Base
 {
-    public class BaseEntityService<TEntity, TEntityDto> : IBaseEntityService<TEntity, TEntityDto>
+    public class BaseEntityService<TEntity, TEntityDto,TUnitOfWork> : IBaseEntityService<TEntity, TEntityDto>
         where TEntity : class, IBaseEntity
          where TEntityDto : class, IBaseEntityDto
+        where TUnitOfWork : IUnitOfWork
     {
-        protected readonly IUnitOfWork<BaseContext> _uow;
+        protected readonly TUnitOfWork _uow;//IUnitOfWork<BaseContext> _uow;
         protected readonly IMapper _mapper;
-        public BaseEntityService(IUnitOfWork<BaseContext> uow,
+        public BaseEntityService(TUnitOfWork uow,
             IMapper mapper)
         {
             _uow = uow;

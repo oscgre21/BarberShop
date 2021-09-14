@@ -12,12 +12,13 @@ using System.Threading.Tasks;
 
 namespace BarberShop.Domain.Repositories
 {
-    public class BaseRepository<T> : IRepository<T> where T : class, IBaseEntity
+    public class BaseRepository<T,Dbcontext> : IRepository<T> where T : class, IBaseEntity
+        where Dbcontext : DbContext
     {
-        public readonly IUnitOfWork<BaseContext> _uow;
-        public readonly BaseContext _context;
+        public readonly IUnitOfWork<Dbcontext> _uow;
+        public readonly Dbcontext _context;
         public readonly DbSet<T> _dbSet;
-        public BaseRepository(IUnitOfWork<BaseContext> uow)
+        public BaseRepository(IUnitOfWork<Dbcontext> uow)
         {
             _uow = uow;
             _context = _uow.Context;

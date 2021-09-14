@@ -33,7 +33,36 @@ namespace BarberShop.Domain.UnitOfWork
 
         public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class, IBaseEntity
         {
-            return (_serviceProvider.GetService(typeof(TEntity)) ?? new BaseRepository<TEntity>(this)) as IRepository<TEntity>;
+            return (_serviceProvider.GetService(typeof(TEntity)) ?? new BaseRepository<TEntity, BaseDBContext>(this)) as IRepository<TEntity>;
+        }
+    }
+
+    public class AuthUnitOfWork : IUnitOfWork<BaseDBContext>
+    {
+        public BaseDBContext Context { get; set; }
+        public readonly IServiceProvider _serviceProvider;
+
+        public AuthUnitOfWork(IServiceProvider serviceProvider, BaseDBContext context)
+        {
+            _serviceProvider = serviceProvider;
+            this.Context = context;
+        }
+
+        public async Task<int> Commit()
+        {
+            var result = await Context.SaveChangesAsync();
+            return result;
+        }
+
+
+        public void Dispose()
+        {
+            Context.Dispose();
+        }
+
+        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class, IBaseEntity
+        {
+            return (_serviceProvider.GetService(typeof(TEntity)) ?? new BaseRepository<TEntity,BaseDBContext>(this)) as IRepository<TEntity>;
         }
     }
 }

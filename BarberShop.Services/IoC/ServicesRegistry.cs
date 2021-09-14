@@ -8,6 +8,9 @@ using BarberShop.Services.Base;
 using BarberShop.Services.Logging;
 using BarberShop.Services.Demo;
 using BarberShop.Services.Auth;
+using AutoMapper;
+using BarberShop.Domain.UnitOfWork;
+using BarberShop.Domain.Contexts;
 
 namespace BarberShop.Services.IoC
 {
@@ -24,11 +27,16 @@ namespace BarberShop.Services.IoC
         public static void AddOnlyEntityServicesRegistry(this IServiceCollection services)
         { 
       
-            services.AddScoped(typeof(IBaseEntityService<,>) , typeof(BaseEntityService<,>));
-            
+            services.AddScoped(typeof(IBaseEntityService<,>) , typeof(BaseEntityService<,,>));
+
+            /*
+            var sp = services.BuildServiceProvider();
+            var _mapper = sp.GetRequiredService<IMapper>();
+            var db = sp.GetRequiredService<IUnitOfWork<BaseDBContext>>();// as IUnitOfWork<BaseContext>;
+            */
             services.AddScoped<IDemoServices, DemoServices>();
 
-            services.AddScoped<ITestDemoServices, TestDemoServices>();
+            services.AddScoped<IProductServices, ProductServices>();
 
 
             // services.AddScoped<ILoggingService, SentryLogger>(); 

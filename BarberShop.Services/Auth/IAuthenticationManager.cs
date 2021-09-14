@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BarberShop.BL.DTOs.Global;
+using BarberShop.Core.Lib;
 using BarberShop.Domain.Contexts;
 using BarberShop.Domain.Entities.DataPerson;
 using BarberShop.Domain.Entities.Users;
@@ -21,13 +22,13 @@ public interface IAuthenticationManager : IBaseEntityService<UserIdentity, UserC
     {
         Task<string> Authenticate(string username, string password);
         IDictionary<string, UserCredentialsDto> Tokens { get; }
-        bool Validate(string token);
+        Either<UserCredentialsDto,bool> Validate(string token);
         Task<string> register(UserCredentialsDto user);
          
 
     }
 
-    public class AuthenticationManager : BaseEntityService<UserIdentity, UserCredentialsDto>, IAuthenticationManager
+    public class AuthenticationManager : BaseEntityService<UserIdentity, UserCredentialsDto, IUnitOfWork<BaseDBContext>>, IAuthenticationManager
     {
         private readonly IDictionary<string, UserCredentialsDto> tokens = new Dictionary<string, UserCredentialsDto>();
 
@@ -46,8 +47,7 @@ public interface IAuthenticationManager : IBaseEntityService<UserIdentity, UserC
             foreach (var tokens in ident) {
                 if (tokens.authkey != null) {
                     var data = _mapper.Map<UserCredentialsDto>(tokens);
-                    Tokens.Add(tokens.authkey, data);
-                    
+                    Tokens.Add(tokens.authkey, data); 
                 }
                    
             }
@@ -131,10 +131,11 @@ public interface IAuthenticationManager : IBaseEntityService<UserIdentity, UserC
             return token;
         }
 
-        public  bool Validate(string token)
+        public Either<UserCredentialsDto, bool> Validate(string token)
         {
             var data = Tokens.FirstOrDefault(t => t.Key == token).Value;
-            return  data != null?true:false;
+            return  data != null? new Either<UserCredentialsDto, bool>(data) 
+                            : new Either<UserCredentialsDto, bool>(false);
         }
          
     }
